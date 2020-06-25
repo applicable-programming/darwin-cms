@@ -34,7 +34,7 @@ class Shipping {
     private $shippingProvider;
 
 
-    public function __construct($pricePerKilogram, $shippingProvider) {
+    public function __construct($pricePerKilogram) {
         $this->pricePerKilogram = $pricePerKilogram;
     }
     
@@ -68,7 +68,7 @@ class Shipping {
 
 
 $product = new Product(5, 1);
-$product3->setFreeShipping();
+//$product3->setFreeShipping();
 
 $pricePerKilogram = 5;
 
