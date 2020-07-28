@@ -1,10 +1,8 @@
 <?php
 
 class Controller {
-    //put your code here
-    
-    function runAction($actionName) {
-        
+
+    public function runAction($actionName) {
         if(method_exists($this, 'runBeforeAction')){
             $result = $this->runBeforeAction();
             if($result == false) {

@@ -2,7 +2,13 @@
 
 class AboutUsController extends Controller{
     function defaultAction() {
-       include 'view/about-us.html';  
+        
+        $variables['title'] = 'About us page';
+        $variables['content'] = 'About us content of the page';
+        
+        $template = new Template('default');
+        $template->view('static-page', $variables);
+        
     }
     
 }

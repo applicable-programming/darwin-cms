@@ -6,14 +6,26 @@ class ContactController extends Controller {
         
         if($_SESSION['has_submitted_the_form'] ?? 0 == 1){   
             
-            include 'view/contact/contact-us-already-contacted.html';
+            
+        
+        $variables['title'] = 'You have already submitted the form';
+        $variables['content'] = 'Please be patient as we process your message';
+        
+        $template = new Template('default');
+        $template->view('static-page', $variables);
+        
             return false;
         }
         return true;
     }
     
     function defaultAction(){
-        include 'view/contact/contact-us.html';
+        
+        $variables['title'] = 'Contact us page';
+        $variables['content'] = 'Please write us a message';
+        
+        $template = new Template('default');
+        $template->view('contact/contact-us', $variables);
     }
     function submitContactFormAction() {
        
@@ -24,8 +36,14 @@ class ContactController extends Controller {
         // send email
         
         $_SESSION['has_submitted_the_form'] = 1;
+        
+        
+        $variables['title'] = 'Thank you for your message';
+        $variables['content'] = 'We will get back to you';
+        
+        $template = new Template('default');
+        $template->view('static-page', $variables);
 
-        include 'view/contact/contact-us-thank-you.html';
     }
     
 }
