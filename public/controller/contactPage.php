@@ -8,11 +8,15 @@ class ContactController extends Controller {
             
             
         
-        $variables['title'] = 'You have already submitted the form';
-        $variables['content'] = 'Please be patient as we process your message';
-        
-        $template = new Template('default');
-        $template->view('static-page', $variables);
+            $dbh = DatabaseConnection::getInstance();
+            $dbc = $dbh->getConnection();
+
+            $pageObj = new Page($dbc);
+            $pageObj->find(4);
+            $variables['pageObj'] = $pageObj;
+
+            $template = new Template('default');
+            $template->view('static-page', $variables);
         
             return false;
         }
@@ -21,8 +25,13 @@ class ContactController extends Controller {
     
     function defaultAction(){
         
-        $variables['title'] = 'Contact us page';
-        $variables['content'] = 'Please write us a message';
+        
+        $dbh = DatabaseConnection::getInstance();
+        $dbc = $dbh->getConnection();
+        
+        $pageObj = new Page($dbc);
+        $pageObj->find(3);
+        $variables['pageObj'] = $pageObj;
         
         $template = new Template('default');
         $template->view('contact/contact-us', $variables);
