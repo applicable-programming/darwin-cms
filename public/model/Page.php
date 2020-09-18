@@ -1,20 +1,25 @@
 <?php
+
 class Page {
-    private $id;
+    public $id;
     public $title;
     public $content;
-    private $dbh;
     
-    public function __construct($dbh) {
-        $this->dbh = $dbh;
+    private $dbc;
+    
+    public function __construct($dbc) {
+        $this->dbc = $dbc;
     }
     
-    public function find($id) {
+    public function findById($id){
         
-
-        $stmt = $this->dbh->prepare("SELECT * FROM pages WHERE id=:id");
-        $stmt->execute(['id' => $id]); 
+       
+        
+        $sql = "SELECT * FROM pages WHERE id = :id";
+        $stmt = $this->dbc->prepare($sql);
+        $stmt->execute(['id'=> $id]);
         $pageData = $stmt->fetch();
+        
         
         $this->id = $pageData['id'];
         $this->title = $pageData['title'];
