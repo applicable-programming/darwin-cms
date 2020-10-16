@@ -32,7 +32,7 @@ class ContactController extends Controller {
         $dbc = $dbh->getConnection();
         
         $pageObj = new Page($dbc);
-        $pageObj->findById(5);
+        $pageObj->findBy('id', $this->entityId);
         $variables['pageObj'] = $pageObj;
         
         

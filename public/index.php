@@ -8,6 +8,8 @@ define('VIEW_PATH', ROOT_PATH . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARAT
 require_once ROOT_PATH . 'src/Controller.php';
 require_once ROOT_PATH . 'src/Template.php';
 require_once ROOT_PATH . 'src/DatabaseConnection.php';
+require_once ROOT_PATH . 'src/Entity.php';
+require_once ROOT_PATH . 'src/Router.php';
 require_once ROOT_PATH . 'model/Page.php';
 
 
@@ -17,34 +19,25 @@ require_once ROOT_PATH . 'model/Page.php';
 DatabaseConnection::connect('localhost', 'darwin_cms', 'root', '');
 
 
-// if / else logic 
 
-$section = $_GET['section'] ?? $_POST['section'] ?? 'home';
-$action = $_GET['action'] ?? $_POST['action'] ?? 'default';
+// Routing
+$action = $_GET['seo_name'] ?? 'home';
+
+$dbh = DatabaseConnection::getInstance();
+$dbc = $dbh->getConnection();
+
+$router = new Router($dbc);
+
+$router->findBy('pretty_url',$action);
+
+$action = $router->action != '' ? $router->action : 'default';
+$moduleName = ucfirst($router->module) . 'Controller';
 
 
-
-if ($section=='about-us') {
+if(file_exists(ROOT_PATH . 'controller/' . $moduleName . '.php')) {
     
-    include ROOT_PATH . 'controller/AboutUsController.php';
-    
-    $aboutController = new AboutUsController();
-    $aboutController->runAction($action);
-    
-} else if ($section == 'contact'){
-    
-    include ROOT_PATH . 'controller/contactPage.php';
-    $contactController = new ContactController();
-    $contactController->runAction($action);
-    
-} else {
-    include ROOT_PATH . 'controller/homePage.php';
-    $homePageController = new HomePageController();
-    $homePageController->runAction($action);
-    
+    include ROOT_PATH . 'controller/' . $moduleName . '.php';
+    $controller = new $moduleName();
+    $controller->setEntityId($router->entity_id);
+    $controller->runAction($action);
 }
-
-
-
-
-
