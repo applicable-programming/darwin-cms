@@ -24,8 +24,9 @@ abstract class Entity {
         $stmt->execute(['value'=> $fieldValue]);
         $databaseData = $stmt->fetch();
 //         $stmt->debugDumpParams();
-        
-        $this->setValues($databaseData);
+        if($databaseData){
+            $this->setValues($databaseData);
+        }
 
     }
     
