@@ -26,20 +26,44 @@ class DashboardController extends Controller {
             $username = $_POST['username'] ?? '';
             $password = $_POST['password'] ?? '';
             
-            $auth = new Auth();
-            if($auth->checkLogin($username, $password)){
-               // all is good
-                $_SESSION['is_admin'] = 1;
-                header('Location: /admin/');
-                exit();
+            $validation = new Validation();
+            if(!$validation
+                    ->addRule(new ValidateMinimum(3))
+                    ->addRule(new ValidateMaximum(20))
+                    ->addRule(new ValidateSpecialCharacter())
+                    ->validate($password)
+                    ) {
+                
+                $_SESSION['validationRules']['error'] = "Password must be between 3 and 20 characters"
+                        . " and must contain one special character";
             }
             
-            var_dump('bad login');
+            if(!$validation
+                    ->addRule(new ValidateMinimum(3))
+                    ->addRule(new ValidateEmail())
+                    ->validate($username)
+                    ) {
+                $_SESSION['validationRules']['error'] = "Username is not valid email";
+            }
+            
+            if(($_SESSION['validationRules']['error'] ?? '') == ''){
+                $auth = new Auth();
+                if($auth->checkLogin($username, $password)){
+                   // all is good
+                    $_SESSION['is_admin'] = 1;
+                    header('Location: /admin/');
+                    exit();
+                }
+
+                $_SESSION['validationRules']['error'] = "Username or password is incorect";
+            }
+
         }
         
         
         
         include VIEW_PATH . 'admin/login.html';
+        unset($_SESSION['validationRules']['error']);
     }
 
 }

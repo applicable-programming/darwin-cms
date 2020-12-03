@@ -42,9 +42,19 @@
           <input type="hidden" name="postAction" value="1">
         <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
         <label for="inputEmail" class="sr-only">Email address</label>
-        <input type="text" id="inputEmail" class="form-control" name="username" placeholder="Email address" required autofocus>
+        <input type="text" id="inputEmail" class="form-control" name="username" 
+               value="<?=$_POST['username'] ?? '' ?>"
+               
+               placeholder="Email address" required autofocus>
         <label for="inputPassword" class="sr-only">Password</label>
-        <input type="password" id="inputPassword" class="form-control" name="password" placeholder="Password" required>
+        <input type="password" id="inputPassword" class="form-control" name="password" 
+                value="<?=$_POST['password'] ?? '' ?>"
+               placeholder="Password" required>
+        
+        <div class="text-danger">
+            <?=$_SESSION['validationRules']['error'] ?? '' ?>
+        </div>
+        
         <div class="checkbox mb-3">
           <label>
             <input type="checkbox" value="remember-me"> Remember me
