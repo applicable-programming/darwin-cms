@@ -30,12 +30,12 @@ class DashboardController extends Controller {
             if(!$validation
                     ->addRule(new ValidateMinimum(3))
                     ->addRule(new ValidateMaximum(20))
+                    ->addRule(new ValidateNoEmptySpaces())
                     ->addRule(new ValidateSpecialCharacter())
                     ->validate($password)
                     ) {
                 
-                $_SESSION['validationRules']['error'] = "Password must be between 3 and 20 characters"
-                        . " and must contain one special character";
+                $_SESSION['validationRules']['errors'] = $validation->getAllErrorMessages();
             }
             
             if(!$validation
@@ -55,7 +55,7 @@ class DashboardController extends Controller {
                     exit();
                 }
 
-                $_SESSION['validationRules']['error'] = "Username or password is incorect";
+                $_SESSION['validationRules']['errors'] = $validation->getAllErrorMessages();
             }
 
         }

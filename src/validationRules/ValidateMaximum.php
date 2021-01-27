@@ -1,6 +1,6 @@
 <?php
 
-class ValidateMaximum {
+class ValidateMaximum implements ValidationRuleInterface{
     private $maximum;
     
     public function __construct($maximum) {
@@ -14,6 +14,10 @@ class ValidateMaximum {
         }
         return true;
         
+    }
+    
+    function getErrorMessage() {
+        return "Maximum value is over " . $this->maximum;
     }
     
 }

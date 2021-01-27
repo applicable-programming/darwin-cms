@@ -9,6 +9,7 @@ define('ENCRYPTION_SALT', 'jh3245hgdfv8934hu3nvr4h5i');
 
 // TODO: move to autoInclude
 
+require_once ROOT_PATH . 'src/interfaces/ValidationRuleInterface.php';
 require_once ROOT_PATH . 'src/Controller.php';
 require_once ROOT_PATH . 'src/Template.php';
 require_once ROOT_PATH . 'src/DatabaseConnection.php';
@@ -20,6 +21,7 @@ require_once ROOT_PATH . 'src/validationRules/ValidateMinimum.php';
 require_once ROOT_PATH . 'src/validationRules/ValidateMaximum.php';
 require_once ROOT_PATH . 'src/validationRules/ValidateEmail.php';
 require_once ROOT_PATH . 'src/validationRules/ValidateSpecialCharacter.php';
+require_once ROOT_PATH . 'src/validationRules/ValidateNoEmptySpaces.php';
 require_once MODULE_PATH . 'page/models/Page.php';
 require_once MODULE_PATH . 'user/models/User.php';
 

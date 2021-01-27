@@ -1,6 +1,6 @@
 <?php
 
-class ValidateMinimum {
+class ValidateMinimum implements ValidationRuleInterface{
     private $minimum;
     
     public function __construct($minimum) {
@@ -15,5 +15,9 @@ class ValidateMinimum {
         return true;
         
     }
-    
+
+    public function getErrorMessage() {
+        return "Minimum value is under " . $this->minimum;
+    }
+
 }
