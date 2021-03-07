@@ -3,6 +3,7 @@
 class Controller {
     
     protected $entityId;
+    public $template;
 
     public function runAction($actionName) {
         if(method_exists($this, 'runBeforeAction')){

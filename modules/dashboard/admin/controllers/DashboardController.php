@@ -15,8 +15,9 @@ class DashboardController extends Controller {
     }
 
     function defaultAction() {
-        
-        echo "Welcome to the administration";
+        $variables = [];
+        header('Location: /admin/index.php?module=page');
+        exit();
         
     }
     
@@ -30,8 +31,8 @@ class DashboardController extends Controller {
             if(!$validation
                     ->addRule(new ValidateMinimum(3))
                     ->addRule(new ValidateMaximum(20))
-                    ->addRule(new ValidateNoEmptySpaces())
-                    ->addRule(new ValidateSpecialCharacter())
+//                    ->addRule(new ValidateNoEmptySpaces())
+//                    ->addRule(new ValidateSpecialCharacter())
                     ->validate($password)
                     ) {
                 
@@ -40,10 +41,10 @@ class DashboardController extends Controller {
             
             if(!$validation
                     ->addRule(new ValidateMinimum(3))
-                    ->addRule(new ValidateEmail())
+//                    ->addRule(new ValidateEmail())
                     ->validate($username)
                     ) {
-                $_SESSION['validationRules']['error'] = "Username is not valid email";
+                $_SESSION['validationRules']['errors'] = $validation->getAllErrorMessages();
             }
             
             if(($_SESSION['validationRules']['error'] ?? '') == ''){

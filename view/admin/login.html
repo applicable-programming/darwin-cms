@@ -52,7 +52,7 @@
                placeholder="Password" required>
         
         <div class="text-danger">
-            <?php foreach($_SESSION['validationRules']['errors'] as $error) { ?>
+            <?php foreach($_SESSION['validationRules']['errors'] ?? [] as $error) { ?>
                 <?=$error;?> <br />
             <?php }?>
             
