@@ -17,23 +17,52 @@ abstract class Entity {
     
     
     public function findBy($fieldName, $fieldValue){
-        
+ 
 
-        $sql = "SELECT * FROM " . $this->tableName . " WHERE " . $fieldName . " = :value";
-        $stmt = $this->dbc->prepare($sql);
-        $stmt->execute(['value'=> $fieldValue]);
-        $databaseData = $stmt->fetch();
-//         $stmt->debugDumpParams();
-        if($databaseData){
-            $this->setValues($databaseData);
+        $result = $this->find($fieldName, $fieldValue);
+        if($result && $result[0]){
+            $this->setValues($this, $result[0]);
         }
-
     }
     
-    public function setValues($values) {
+    public function findAll() {
+        $results = [];
+        $databaseData =  $this->find();
         
-        foreach ($this->fields as $fieldName) {
-            $this->$fieldName = $values[$fieldName];
+        if($databaseData){
+            $className = static::class;
+            foreach ($databaseData as $objectData) {
+                $object = new $className($this->dbc);
+                $object = $this->setValues($object, $objectData);
+                $results[] = $object;
+            }
         }
+        return $results;
+    }
+    
+    private function find($fieldName = '', $fieldValue = '') {
+        
+        $results = [];
+        $preparedFields = [];
+        $sql = "SELECT * FROM " . $this->tableName;
+        if($fieldName){
+            $sql .= " WHERE " . $fieldName . " = :value";
+            $preparedFields = ['value'=> $fieldValue];
+        }
+        $stmt = $this->dbc->prepare($sql);
+        $stmt->execute($preparedFields);
+        
+        $databaseData = $stmt->fetchAll();
+        // var_dump($databaseData);
+        return $databaseData;
+        
+    }
+    
+    public function setValues($object, $values) {
+        
+        foreach ($object->fields as $fieldName) {
+            $object->$fieldName = $values[$fieldName];
+        }
+        return $object;
     }
 }

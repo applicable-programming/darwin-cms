@@ -17,6 +17,13 @@ class DashboardController extends Controller {
 
     function defaultAction() {
         $variables = [];
+        
+        $dbh = DatabaseConnection::getInstance();
+        $dbc = $dbh->getConnection();
+        
+        $pageHandler = new Page($dbc);
+        $pages = $pageHandler->findAll();
+        $variables['pages'] = $pages;
         $this->template->view('page/admin/views/page-list', $variables);
         
     }
