@@ -1,6 +1,10 @@
 <?php
 session_start();
 
+use src\DatabaseConnection;
+use src\Template;
+use modules\page\admin\controllers\PageController;
+
 define('ROOT_PATH', dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR );
 define('VIEW_PATH', ROOT_PATH . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR);
 define('MODULE_PATH', ROOT_PATH . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR);
@@ -9,21 +13,16 @@ define('ENCRYPTION_SALT', 'jh3245hgdfv8934hu3nvr4h5i');
 
 // TODO: move to autoInclude
 
-require_once ROOT_PATH . 'src/interfaces/ValidationRuleInterface.php';
-require_once ROOT_PATH . 'src/Controller.php';
-require_once ROOT_PATH . 'src/Template.php';
-require_once ROOT_PATH . 'src/DatabaseConnection.php';
-require_once ROOT_PATH . 'src/Entity.php';
-require_once ROOT_PATH . 'src/Router.php';
-require_once ROOT_PATH . 'src/Auth.php';
-require_once ROOT_PATH . 'src/Validation.php';
-require_once ROOT_PATH . 'src/validationRules/ValidateMinimum.php';
-require_once ROOT_PATH . 'src/validationRules/ValidateMaximum.php';
-require_once ROOT_PATH . 'src/validationRules/ValidateEmail.php';
-require_once ROOT_PATH . 'src/validationRules/ValidateSpecialCharacter.php';
-require_once ROOT_PATH . 'src/validationRules/ValidateNoEmptySpaces.php';
-require_once MODULE_PATH . 'page/models/Page.php';
-require_once MODULE_PATH . 'user/models/User.php';
+spl_autoload_register(function ($class_name) {
+    
+     $file = ROOT_PATH . str_replace('\\', '/', $class_name) . '.php';
+
+    // if the file exists, require it
+    if (file_exists($file)) {
+        require $file;
+    }
+});
+
 
 
 
@@ -39,6 +38,10 @@ $module = $_GET['module'] ?? $_POST['module'] ?? 'dashboard';
 $action = $_GET['action'] ?? $_POST['action'] ?? 'default';
 
 
+$dbh = DatabaseConnection::getInstance();
+$dbc = $dbh->getConnection();
+        
+        
 
 if ($module=='dashboard') {
     
@@ -52,8 +55,9 @@ if ($module=='dashboard') {
     
     include MODULE_PATH . 'page/admin/controllers/PageController.php';
     
-    $dashboardController = new DashboardController();
-    $dashboardController->template = new Template('admin/layout/default');
-    $dashboardController->runAction($action);
+    $pageController = new PageController();
+    $pageController->dbc = $dbc;
+    $pageController->template = new Template('admin/layout/default');
+    $pageController->runAction($action);
     
 }

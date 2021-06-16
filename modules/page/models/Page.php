@@ -1,6 +1,6 @@
 <?php
-
-class Page extends Entity {
+namespace modules\page\models;
+class Page extends \src\Entity {
     
     public function __construct($dbc) {
         parent::__construct($dbc, 'pages');

@@ -1,5 +1,5 @@
 <?php
-
+namespace src;
 abstract class Entity {
     
     protected $dbc;

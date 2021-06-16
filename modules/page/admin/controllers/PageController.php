@@ -1,7 +1,9 @@
 <?php
 
+namespace modules\page\admin\controllers;
 
-class DashboardController extends Controller {
+use modules\page\models\Page;
+class PageController extends \src\Controller {
     
     function runBeforeAction() {
         if($_SESSION['is_admin'] ?? false == true){
@@ -18,13 +20,30 @@ class DashboardController extends Controller {
     function defaultAction() {
         $variables = [];
         
-        $dbh = DatabaseConnection::getInstance();
-        $dbc = $dbh->getConnection();
-        
-        $pageHandler = new Page($dbc);
+        $pageHandler = new Page($this->dbc);
         $pages = $pageHandler->findAll();
         $variables['pages'] = $pages;
         $this->template->view('page/admin/views/page-list', $variables);
         
     }
+    
+    function editPageAction(){
+        $pageId = $_GET['id'];
+        $variables = [];
+        
+        if($_POST['action'] ?? false){
+            var_dump($_POST);
+        }
+        
+        $page = new Page($this->dbc);
+        $page->findBy('id', $pageId);
+        $variables['page'] = $page;
+        $this->template->view('page/admin/views/page-edit', $variables);
+    }
 }
+
+
+
+
+
+
