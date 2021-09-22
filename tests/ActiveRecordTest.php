@@ -1,9 +1,10 @@
 <?php declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
+use \modules\page\models\Page;
 
 
-require_once 'full_path/source/src/Entity.php';
-require_once 'full_path/source/modules/page/models/Page.php';
+require_once 'full_path/sources/darwin-cms/source/src/Entity.php';
+require_once 'full_path/sources/darwin-cms/source/modules/page/models/Page.php';
 
 class FakeStmt{
     function execute() {}
@@ -43,6 +44,31 @@ final class ActiveRecordTest extends TestCase
         
         $this->assertEquals(12, $page->id);
         
+    }
+    
+    public function testSave(): void 
+    {
+        $mockDatabase = $this->getMockBuilder(FakeDatabaseConnection::class)
+                ->enableProxyingToOriginalMethods()
+                 ->getMock();
+        $mockDatabase->expects($this->exactly(2))
+                 ->method('prepare')
+                 ->with(
+                        $this->logicalOr(
+                            $this->equalTo('SELECT * FROM pages WHERE id = :value'),
+                            $this->equalTo('UPDATE pages SET title = :title, content = :content WHERE id = :id')
+                        )
+
+                    );
+
+        
+        $page = new Page($mockDatabase);
+        $page->findBy('id', 12);
+        
+        $page->title = "new title";
+        $page->save();
+        
+        $this->assertEquals("new title", $page->title);
     }
 
 }

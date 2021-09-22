@@ -3,6 +3,8 @@
 namespace modules\page\admin\controllers;
 
 use modules\page\models\Page;
+
+
 class PageController extends \src\Controller {
     
     function runBeforeAction() {
@@ -31,12 +33,17 @@ class PageController extends \src\Controller {
         $pageId = $_GET['id'];
         $variables = [];
         
-        if($_POST['action'] ?? false){
-            var_dump($_POST);
-        }
-        
         $page = new Page($this->dbc);
         $page->findBy('id', $pageId);
+        
+        if($_POST['action'] ?? false){
+            $page->setValues($_POST);
+            $page->save();
+
+             $this->log->warning('Admin has changed the page id:' . $pageId);
+
+        }
+        
         $variables['page'] = $page;
         $this->template->view('page/admin/views/page-edit', $variables);
     }

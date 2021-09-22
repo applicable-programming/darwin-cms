@@ -6,6 +6,7 @@ class Controller {
     protected $entityId;
     public $template;
     public $dbc;
+    public $log;
 
     public function runAction($actionName) {
         if(method_exists($this, 'runBeforeAction')){

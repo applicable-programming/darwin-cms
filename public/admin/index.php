@@ -4,6 +4,8 @@ session_start();
 use src\DatabaseConnection;
 use src\Template;
 use modules\page\admin\controllers\PageController;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
 
 define('ROOT_PATH', dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR );
 define('VIEW_PATH', ROOT_PATH . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR);
@@ -23,7 +25,7 @@ spl_autoload_register(function ($class_name) {
     }
 });
 
-
+require '../../vendor/autoload.php';
 
 
 // Bootstrap
@@ -55,7 +57,12 @@ if ($module=='dashboard') {
     
     include MODULE_PATH . 'page/admin/controllers/PageController.php';
     
+    // create a log channel
+    $log = new Logger('name');
+    $log->pushHandler(new StreamHandler('pages.log', Logger::WARNING));
+            
     $pageController = new PageController();
+    $pageController->log = $log;
     $pageController->dbc = $dbc;
     $pageController->template = new Template('admin/layout/default');
     $pageController->runAction($action);
